@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import csv
+import re
 import sys
 from functools import lru_cache
 from pathlib import Path
@@ -21,6 +22,22 @@ def artigo_eh_filme(titulo: str) -> bool:
     return bool(html) and eh_filme(BeautifulSoup(html, "html.parser"))
 
 
+ORDEM = {"alta": 0, "media": 1, "baixa": 2}
+
+
+def consolida(linhas: list[dict]) -> list[dict]:
+    """Descarta confiança baixa, tira "(ano)" do título e mantém uma linha por filme/emissora/ano."""
+    melhores: dict[tuple, dict] = {}
+    for d in linhas:
+        if d["confianca"] == "baixa":
+            continue
+        d["titulo"] = re.sub(r"\s*\(\d{4}\)$", "", d["titulo"])
+        k = (d["titulo"].lower(), d["emissora"], d["ano_exibicao"])
+        if k not in melhores or ORDEM[d["confianca"]] < ORDEM[melhores[k]["confianca"]]:
+            melhores[k] = d
+    return list(melhores.values())
+
+
 def main() -> None:
     titulos: dict[str, str] = {}
     for q in QUERIES:
@@ -35,6 +52,7 @@ def main() -> None:
             linhas.append(d)
         if i % 50 == 0:
             print(f"{i}/{len(titulos)} artigos, {len(linhas)} menções", file=sys.stderr, flush=True)
+    linhas = consolida(linhas)
     OUT.mkdir(exist_ok=True)
     campos = ["titulo", "ano_lancamento", "emissora", "faixa", "ano_exibicao", "confianca", "origem", "trecho", "artigo", "url", "consulta"]
     linhas.sort(key=lambda d: (d["emissora"], d["ano_exibicao"], d["titulo"].lower()))

@@ -33,6 +33,13 @@ Lista **parcial** de filmes que a TV Globo e o SBT exibiram entre 1995 e 2005, e
 | `artigo`, `url` | artigo da Wikipédia de onde saiu o trecho |
 | `consulta` | busca que levou ao artigo |
 
+### Resultado da coleta (novembro de 2026)
+
+Foram lidos 1.407 artigos candidatos. Sobraram **16 menções, de 15 filmes distintos**: 10 na Globo e 6 no SBT. As linhas de confiança `baixa` foram descartadas porque todas eram falsos positivos. Problemas conhecidos nas linhas que ficaram:
+
+- *Sexta-Feira 13*: o trecho fala da exibição na **Band** com a dublagem da Globo. Não é uma exibição da Globo.
+- *South Park - O Filme* e *South Park: Bigger, Longer & Uncut* são o mesmo filme, citado com títulos diferentes em dois artigos.
+
 A extração é heurística. **Confira o `trecho` antes de usar uma linha**, sobretudo as de confiança `media` e `baixa`: o ano pode se referir a outro fato da mesma frase.
 
 Os trechos vêm da Wikipédia e estão sob a licença [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.pt_BR). A atribuição de cada trecho é o link na coluna `url`.
