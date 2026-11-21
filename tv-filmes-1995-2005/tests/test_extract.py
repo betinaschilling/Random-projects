@@ -39,3 +39,13 @@ def test_artigo_que_nao_e_filme_so_aceita_links_de_filme():
 def test_exibicao_antes_do_lancamento_e_descartada():
     html = pagina("<p>Exibido pela Rede Globo em 1996.</p>", ["Filmes de 2001"])
     assert extrai("Y (filme)", html, "u") == []
+
+
+def test_ano_entre_parenteses_e_lancamento():
+    corpo = '<p>Entre os filmes estão <i><a title="Guerra de Canudos (filme)">Guerra de Canudos</a></i> (1997), também exibido pela Rede Globo como minissérie.</p>'
+    assert extrai("Sérgio Rezende", pagina(corpo), "u", lambda t: True) == []
+
+
+def test_serie_de_tv_nao_e_filme():
+    html = pagina("<p>Foi reprisado pela Rede Globo em 2003.</p>", ["Filmes de anime", "Séries de televisão de anime de 2001"])
+    assert extrai("Digimon Tamers", html, "u") == []

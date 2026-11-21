@@ -38,4 +38,10 @@ QUERIES = [f'"{f}" {FAIXAS[f]} filme' if f in AMBIGUAS else f'"{f}"' for f in FA
     '"exibição na televisão" Globo filme',
     '"exibido pela primeira vez" Globo filme',
     '"exibido pela primeira vez" SBT filme',
+    '"televisão aberta" Globo filme',
+    '"televisão aberta" SBT filme',
+    '"TV aberta brasileira" filme',
+    '"televisão aberta brasileira" filme',
+    '"dublagem" "exibida pela Rede Globo" filme',
+    '"dublagem" "SBT" filme 199',
 ]

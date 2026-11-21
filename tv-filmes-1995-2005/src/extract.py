@@ -52,6 +52,8 @@ def _limpa(soup: BeautifulSoup) -> BeautifulSoup:
 
 def eh_filme(soup: BeautifulSoup) -> bool:
     cats = [a.get_text() for a in soup.select("#mw-normal-catlinks li a")]
+    if any(c.startswith(("Séries de televisão", "Programas de televisão", "Programas da", "Programas do", "Telenovelas", "Minisséries", "Animes", "Séries de animação", "Desenhos animados")) for c in cats):
+        return False
     return any(c.startswith(("Filmes", "Telefilmes")) for c in cats)
 
 
@@ -83,6 +85,8 @@ def _anos_proximos(frase: str, pos: int) -> list[int]:
     anos = []
     for m in RE_ANO.finditer(frase):
         # aceita o ano até JANELA caracteres depois da menção, ou até 60 antes ("Em 1998, a Globo exibiu")
+        if frase[max(0, m.start() - 1):m.start()] == "(" and frase[m.end():m.end() + 1] == ")":
+            continue  # "Título (1997)": ano de lançamento
         if pos - 60 - len("Globo") <= m.start() <= pos + JANELA:
             a = int(m.group(1))
             if ANO_MIN <= a <= ANO_MAX:
@@ -134,8 +138,6 @@ def extrai(titulo: str, html: str, url: str, artigo_eh_filme: Callable[[str], bo
                             continue
                         if link and (re.search(r"\((?:filme|telefilme)", link) or artigo_eh_filme(link)):
                             alvos.append((RE_PAREN.sub("", link) if link.lower().startswith(t.lower()[:4]) else t, None, f"citado em '{titulo}'"))
-                        elif not link and re.search(r"\bfilmes?\b", frase, re.I):
-                            alvos.append((t, None, f"citado em '{titulo}' (sem link)"))
                     confianca = "media" if faixa else "baixa"
                 for t, al, origem in alvos:
                     if lanc and ano < lanc:
