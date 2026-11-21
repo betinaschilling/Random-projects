@@ -6,6 +6,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+tv-filmes = ["requests>=2.31", "beautifulsoup4>=4.12"]
 
 [build-system]
 requires = ["setuptools>=68"]
